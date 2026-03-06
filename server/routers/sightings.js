@@ -1,13 +1,16 @@
-const require = require('express');
+const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
 router.get('/', async (req, res) => {
   try {
-    const sightings = await db.any('Select * From sigthings');
+    const sightings = await db.any(
+      'SELECT * FROM sigthings ORDER BY sighted-at DESC'
+    );
     res.json(sightings);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.log('Error fetching sightings:', err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
