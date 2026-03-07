@@ -11,8 +11,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/sightings', sightingsRouter);
-app.use('/species', speciesRouter);
-app.use('/individuals', individualsRouter);
+//app.use('/species', speciesRouter);
+//app.use('/individuals', individualsRouter);
 
 const PORT = 3001;
 app.listen(PORT, () => {
