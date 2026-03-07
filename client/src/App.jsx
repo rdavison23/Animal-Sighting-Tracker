@@ -1,13 +1,10 @@
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import MyNavBar from "./routes/Navbar";
-import ListStudents from "./components/ListStudents";
+import SightingsList from './components/SightingsList';
 
 function App() {
   return (
-    <div className="App">
-      <MyNavBar />
-      <ListStudents />
+    <div>
+      <h1>Animal Sighting Tracker</h1>
+      <SightingsList />
     </div>
   );
 }
