@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/db-connection');
 
-//get all
+// GET all sighting
 router.get('/', async (req, res) => {
   try {
     const sightings = await db.any(
-      'SELECT * FROM sigthings ORDER BY sighted-at DESC'
+      'SELECT * FROM sightings ORDER BY sighted_at DESC'
     );
     res.json(sightings);
   } catch (err) {
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-//get sightings by :id
+// GET sighting by :id
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -43,11 +43,10 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /sightings
+// post sighting
 router.post('/', async (req, res) => {
   const { individual_id, sighted_at, location, healthy, email } = req.body;
 
-  // Validate required fields
   if (!individual_id || !sighted_at || !location || !email) {
     return res.status(400).json({ error: 'Missing required fields.' });
   }
@@ -70,12 +69,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT sightings :id
+// UPDATE sighting by :id
+
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { individual_id, sighted_at, location, healthy, email } = req.body;
 
-  // Validate required fields
   if (!individual_id || !sighted_at || !location || !email) {
     return res.status(400).json({ error: 'Missing required fields.' });
   }
@@ -107,7 +106,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE sightings :id
+// DELETE sighting by :id
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
