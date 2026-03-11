@@ -32,5 +32,43 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+// POST /species
+router.post('/', async (req, res) => {
+  const {
+    common_name,
+    scientific_name,
+    estimated_population,
+    conservation_status,
+  } = req.body;
+
+  // Validate required fields
+  if (!common_name || !scientific_name) {
+    return res
+      .status(400)
+      .json({ error: 'common_name and scientific_name are required.' });
+  }
+
+  try {
+    const query = `
+        INSERT INTO species (common_name, scientific_name, estimated_population, conservation_status, created_at)
+        VALUES ($1, $2, $3, $4, NOW())
+        RETURNING *;
+      `;
+
+    const values = [
+      common_name,
+      scientific_name,
+      estimated_population || null,
+      conservation_status || null,
+    ];
+
+    const [newSpecies] = await db.any(query, values);
+
+    res.status(201).json(newSpecies);
+  } catch (err) {
+    console.error('Error creating species:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 module.exports = router;
