@@ -42,4 +42,32 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// POST /sightings
+router.post('/', async (req, res) => {
+  const { individual_id, sighted_at, location, healthy, email } = req.body;
+
+  // Validate required fields
+  if (!individual_id || !sighted_at || !location || !email) {
+    return res.status(400).json({ error: 'Missing required fields.' });
+  }
+
+  try {
+    const query = `
+      INSERT INTO sightings (individual_id, sighted_at, location, healthy, email, created_at)
+      VALUES ($1, $2, $3, $4, $5, NOW())
+      RETURNING *;
+    `;
+
+    const values = [individual_id, sighted_at, location, healthy, email];
+
+    const [newSighting] = await db.any(query, values);
+
+    res.status(201).json(newSighting);
+  } catch (err) {
+    console.error('Error creating sighting:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = router;
