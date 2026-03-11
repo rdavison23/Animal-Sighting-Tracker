@@ -74,4 +74,23 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// DELETE an individual
+router.delete('/:id', async (req, res) => {
+  try {
+    const deleted = await db.oneOrNone(
+      'DELETE FROM individuals WHERE id = $1 RETURNING *',
+      [req.params.id]
+    );
+
+    if (!deleted) {
+      return res.status(404).json({ error: 'Individual not found' });
+    }
+
+    res.json({ message: 'Individual deleted', deleted });
+  } catch (err) {
+    console.error('Error deleting individual:', err);
+    res.status(500).json({ error: 'Failed to delete individual' });
+  }
+});
+
 module.exports = router;
