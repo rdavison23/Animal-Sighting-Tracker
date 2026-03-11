@@ -70,4 +70,65 @@ router.post('/', async (req, res) => {
   }
 });
 
+// PUT sightings :id
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { individual_id, sighted_at, location, healthy, email } = req.body;
+
+  // Validate required fields
+  if (!individual_id || !sighted_at || !location || !email) {
+    return res.status(400).json({ error: 'Missing required fields.' });
+  }
+
+  try {
+    const query = `
+      UPDATE sightings
+      SET individual_id = $1,
+          sighted_at = $2,
+          location = $3,
+          healthy = $4,
+          email = $5
+      WHERE id = $6
+      RETURNING *;
+    `;
+
+    const values = [individual_id, sighted_at, location, healthy, email, id];
+
+    const updated = await db.oneOrNone(query, values);
+
+    if (!updated) {
+      return res.status(404).json({ error: 'Sighting not found' });
+    }
+
+    res.json(updated);
+  } catch (err) {
+    console.error('Error updating sighting:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// DELETE sightings :id
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = `
+      DELETE FROM sightings
+      WHERE id = $1
+      RETURNING *;
+    `;
+
+    const deleted = await db.oneOrNone(query, [id]);
+
+    if (!deleted) {
+      return res.status(404).json({ error: 'Sighting not found' });
+    }
+
+    res.json({ message: 'Sighting deleted', deleted });
+  } catch (err) {
+    console.error('Error deleting sighting:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = router;
