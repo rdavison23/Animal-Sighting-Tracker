@@ -120,4 +120,25 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// DELETE species by :id
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleted = await db.oneOrNone(
+      'DELETE FROM species WHERE id = $1 RETURNING *;',
+      [id]
+    );
+
+    if (!deleted) {
+      return res.status(404).json({ error: 'Species not found' });
+    }
+
+    res.json({ message: 'Species deleted', deleted });
+  } catch (err) {
+    console.error('Error deleting species:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = router;
