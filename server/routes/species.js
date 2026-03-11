@@ -71,4 +71,53 @@ router.post('/', async (req, res) => {
   }
 });
 
+// PUT species by :id
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const {
+    common_name,
+    scientific_name,
+    estimated_population,
+    conservation_status,
+  } = req.body;
+
+  // Validate required fields
+  if (!common_name || !scientific_name) {
+    return res
+      .status(400)
+      .json({ error: 'common_name and scientific_name are required.' });
+  }
+
+  try {
+    const query = `
+        UPDATE species
+        SET common_name = $1,
+            scientific_name = $2,
+            estimated_population = $3,
+            conservation_status = $4
+        WHERE id = $5
+        RETURNING *;
+      `;
+
+    const values = [
+      common_name,
+      scientific_name,
+      estimated_population || null,
+      conservation_status || null,
+      id,
+    ];
+
+    const updated = await db.oneOrNone(query, values);
+
+    if (!updated) {
+      return res.status(404).json({ error: 'Species not found' });
+    }
+
+    res.json(updated);
+  } catch (err) {
+    console.error('Error updating species:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = router;
