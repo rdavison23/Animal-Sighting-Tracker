@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-
 export default function SightingsList() {
   const [sightings, setSightings] = useState([]);
   const [error, setError] = useState(null);
@@ -19,7 +18,7 @@ export default function SightingsList() {
     <div style={{ padding: '20px' }}>
       <h1>All Sightings</h1>
 
-      {sightings.map((s) => (
+      {sightings.map((sighting) => (
         <div
           key={s.id}
           style={{
@@ -30,17 +29,23 @@ export default function SightingsList() {
             backgroundColor: '#fafafa',
           }}>
           <p>
-            <strong>Location:</strong> {s.location}
+            <strong>Nickname:</strong> {sighting.nickname}
           </p>
           <p>
-            <strong>Date:</strong> {new Date(s.sighted_at).toLocaleString()}
+            <strong>Location:</strong> {sighting.location}
           </p>
           <p>
-            <strong>Healthy:</strong> {s.healthy ? 'Yes' : 'No'}
+            <strong>Date:</strong>{' '}
+            {new Date(sighting.sighted_at).toLocaleString()}
+          </p>
+          <p>
+            <strong>Healthy:</strong> {sighting.healthy ? 'Yes' : 'No'}
+          </p>
+          <p>
+            <strong>Email:</strong> {sighting.email}
           </p>
         </div>
       ))}
     </div>
   );
 }
-
