@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 export default function SingleSighting() {
   const { id } = useParams();
   const [sighting, setSighting] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/sightings/${id}`)
+    fetch(`${API_BASE}/sightings/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch sighting');
         return res.json();

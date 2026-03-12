@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function SpeciesList() {
   const [species, setSpecies] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/species')
+    fetch(`{API_BASE}:3001/species`)
       .then((res) => {
         if (!res.ok) {
           throw new Error('Failed to fetch species');

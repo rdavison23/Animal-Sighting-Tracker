@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 
+const API_BASE = import.meta.env.VITE_API_BASE;
 export default function SightingsList() {
   const [sightings, setSightings] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/sightings')
+    console.log('API_BASE =', API_BASE);
+    console.log('Fetching:', `${API_BASE}/sightings`);
+    fetch(`${API_BASE}/sightings`)
       .then((res) => res.json())
       .then((data) => setSightings(data))
       .catch(() => setError('Could not load sightings.'));

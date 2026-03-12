@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 export default function SingleIndividual() {
   const { id } = useParams();
   const [individual, setIndividual] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/individuals/${id}`)
+    fetch(`${API_BASE}/individuals/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch individual');
         return res.json();
@@ -21,9 +23,10 @@ export default function SingleIndividual() {
 
   return (
     <div>
-      <h2>{individual.name}</h2>
-      <p>Species: {individual.species}</p>
-      <p>Age: {individual.age}</p>
+      <h2>Individual #{individual.id}</h2>
+      <p>Nickname: {individual.nickname}</p>
+      <p>Scientist: {individual.scientist_name}</p>
+      <p>Species ID: {individual.species_id}</p>
     </div>
   );
 }
