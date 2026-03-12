@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 export default function NewSightingForm() {
   // State for each form field
   const [individuals, setIndividuals] = useState([]);
-  const [individualId, setIndividualId] = useState(''); // <-- you were missing this
+  const [individualId, setIndividualId] = useState('');
   const [sightedAt, setSightedAt] = useState('');
   const [location, setLocation] = useState('');
   const [healthy, setHealthy] = useState(true);
@@ -12,6 +12,8 @@ export default function NewSightingForm() {
   // State for messages
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  const nameInputRef = useRef(null);
 
   // Load individuals for dropdown
   useEffect(() => {
@@ -62,6 +64,8 @@ export default function NewSightingForm() {
       setLocation('');
       setHealthy(true);
       setEmail('');
+
+      nameInputRef.current.focus();
     } catch (err) {
       setError(err.message);
     }
@@ -74,6 +78,7 @@ export default function NewSightingForm() {
       <form onSubmit={handleSubmit} style={{ maxWidth: '400px' }}>
         <label>Location:</label>
         <input
+          ref={nameInputRef}
           type="text"
           value={location}
           onChange={(e) => setLocation(e.target.value)}

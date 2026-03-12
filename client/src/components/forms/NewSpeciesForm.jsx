@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function NewSpeciesForm() {
   // Form state
@@ -10,6 +10,8 @@ export default function NewSpeciesForm() {
   // Messages
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  const nameInputRef = useRef(null);
 
   async function handleSubmit(e) {
     e.preventDefault(); // prevent page reload
@@ -50,8 +52,72 @@ export default function NewSpeciesForm() {
       setScientificName('');
       setEstimatedPopulation('');
       setConservationStatus('');
+
+      // Move cursor back to the first field
+      nameInputRef.current.focus();
     } catch (err) {
       setError(err.message);
     }
   }
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>Add New Species</h2>
+
+      {error && <p style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
+      {success && (
+        <p style={{ color: 'green', marginBottom: '10px' }}>{success}</p>
+      )}
+
+      <form onSubmit={handleSubmit} style={{ maxWidth: '400px' }}>
+        <label>Common Name:</label>
+        <input
+          type="text"
+          value={commonName}
+          onChange={(e) => setCommonName(e.target.value)}
+          required
+          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+        />
+
+        <label>Scientific Name:</label>
+        <input
+          type="text"
+          value={scientificName}
+          onChange={(e) => setScientificName(e.target.value)}
+          required
+          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+        />
+
+        <label>Estimated Population:</label>
+        <input
+          type="number"
+          value={estimatedPopulation}
+          onChange={(e) => setEstimatedPopulation(e.target.value)}
+          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+        />
+
+        <label>Conservation Status:</label>
+        <input
+          type="text"
+          value={conservationStatus}
+          onChange={(e) => setConservationStatus(e.target.value)}
+          placeholder="e.g., Endangered, Vulnerable"
+          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+        />
+
+        <button
+          type="submit"
+          style={{
+            padding: '10px 15px',
+            backgroundColor: 'green',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}>
+          Submit
+        </button>
+      </form>
+    </div>
+  );
 }
