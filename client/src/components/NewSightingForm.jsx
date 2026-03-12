@@ -1,9 +1,9 @@
-// frontend/src/components/NewSightingForm.jsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function NewSightingForm() {
   // State for each form field
-  const [individualId, setIndividualId] = useState('');
+  const [individuals, setIndividuals] = useState([]);
+  const [individualId, setIndividualId] = useState(''); // <-- you were missing this
   const [sightedAt, setSightedAt] = useState('');
   const [location, setLocation] = useState('');
   const [healthy, setHealthy] = useState(true);
@@ -12,6 +12,14 @@ export default function NewSightingForm() {
   // State for messages
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  // Load individuals for dropdown
+  useEffect(() => {
+    fetch('http://localhost:3001/individuals')
+      .then((res) => res.json())
+      .then((data) => setIndividuals(data))
+      .catch(() => setError('Could not load individuals.'));
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault(); // prevents page reload
@@ -58,6 +66,7 @@ export default function NewSightingForm() {
       setError(err.message);
     }
   }
+
   return (
     <div style={{ padding: '20px' }}>
       <h2>Add New Sighting</h2>
@@ -99,10 +108,19 @@ export default function NewSightingForm() {
           <option value="">Select an animal</option>
           {individuals.map((i) => (
             <option key={i.id} value={i.id}>
-              {i.nickname} (ID {i.id})
+              {i.nickname || i.name} (ID {i.id})
             </option>
           ))}
         </select>
+
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+        />
 
         <button
           type="submit"
