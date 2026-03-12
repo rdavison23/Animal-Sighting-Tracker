@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function NewIndividualForm() {
   // Form fields
@@ -9,6 +9,8 @@ export default function NewIndividualForm() {
   // Messages
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  const nameInputRef = useRef(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -46,6 +48,9 @@ export default function NewIndividualForm() {
       setName('');
       setSpecies('');
       setAge('');
+
+      // Move cursor back to the first field
+      nameInputRef.current.focus();
     } catch (err) {
       setError(err.message);
     }
@@ -60,6 +65,7 @@ export default function NewIndividualForm() {
       <label>
         Name*:
         <input
+          ref={nameInputRef}
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
