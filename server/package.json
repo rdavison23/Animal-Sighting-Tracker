@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
     "dev": " concurrently 'npm start' 'cd .. && cd client && npm run dev' ",
     "start": "node server.js",
     "server": "nodemon server.js"
@@ -23,5 +24,11 @@
     "cross-env": "^10.1.0",
     "jest": "^30.3.0",
     "supertest": "^7.2.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }
