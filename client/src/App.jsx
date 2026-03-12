@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import SightingsList from './components/SightingsList';
-import SingleSighting from './components/SingleSighting';
-import NewSightingForm from './components/NewSightingForm';
+import SightingsList from './components/views/SightingsList';
+import SingleSighting from './components/views/SingleSighting';
+import NewSightingForm from './components/forms/NewSightingForm';
 
-import IndividualsList from './components/IndividualsList';
-import SingleIndividual from './components/SingleIndividual';
+import IndividualsList from './components/views/IndividualsList';
+import SingleIndividual from './components/views/SingleIndividual';
 
 export default function App() {
   return (
