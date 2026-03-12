@@ -58,4 +58,65 @@ export default function NewSightingForm() {
       setError(err.message);
     }
   }
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>Add New Sighting</h2>
+
+      <form onSubmit={handleSubmit} style={{ maxWidth: '400px' }}>
+        <label>Location:</label>
+        <input
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          required
+          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+        />
+
+        <label>Date & Time:</label>
+        <input
+          type="datetime-local"
+          value={sightedAt}
+          onChange={(e) => setSightedAt(e.target.value)}
+          required
+          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+        />
+
+        <label>Healthy?</label>
+        <select
+          value={healthy}
+          onChange={(e) => setHealthy(e.target.value === 'true')}
+          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+
+        <label>Individual:</label>
+        <select
+          value={individualId}
+          onChange={(e) => setIndividualId(e.target.value)}
+          required
+          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}>
+          <option value="">Select an animal</option>
+          {individuals.map((i) => (
+            <option key={i.id} value={i.id}>
+              {i.nickname} (ID {i.id})
+            </option>
+          ))}
+        </select>
+
+        <button
+          type="submit"
+          style={{
+            padding: '10px 15px',
+            backgroundColor: 'green',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}>
+          Submit
+        </button>
+      </form>
+    </div>
+  );
 }
