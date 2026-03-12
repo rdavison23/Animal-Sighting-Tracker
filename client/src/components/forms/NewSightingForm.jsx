@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function NewSightingForm() {
   // State for each form field
@@ -17,7 +18,7 @@ export default function NewSightingForm() {
 
   // Load individuals for dropdown
   useEffect(() => {
-    fetch('http://localhost:3001/individuals')
+    fetch(`${API_BASE}/individuals`)
       .then((res) => res.json())
       .then((data) => setIndividuals(data))
       .catch(() => setError('Could not load individuals.'));

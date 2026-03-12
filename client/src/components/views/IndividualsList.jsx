@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function IndividualsList() {
   const [individuals, setIndividuals] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/individuals')
+    fetch(`${API_BASE}/individuals`)
       .then((res) => {
         if (!res.ok) {
           throw new Error('Failed to fetch individuals');
