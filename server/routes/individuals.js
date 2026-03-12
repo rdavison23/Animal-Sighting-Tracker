@@ -3,12 +3,28 @@ const router = express.Router();
 const db = require('../db/db-connection');
 
 // GET all individuals
-router.get('/', async (req, res) => {
+router.get('/summary', async (req, res) => {
   try {
-    const individuals = await db.any('SELECT * FROM individuals ORDER BY id');
-    res.json(individuals);
+    const query = `
+      SELECT 
+        i.id,
+        i.nickname,
+        i.scientist,
+        i.species_id,
+        COUNT(s.id) AS sighting_count,
+        MIN(s.sighted_at) AS first_sighting,
+        MAX(s.sighted_at) AS last_sighting
+      FROM individuals i
+      LEFT JOIN sightings s
+        ON i.id = s.individual_id
+      GROUP BY i.id
+      ORDER BY i.id;
+    `;
+
+    const results = await db.any(query);
+    res.json(results);
   } catch (err) {
-    console.error('Error fetching individuals:', err);
+    console.error('Error fetching individual summary:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
