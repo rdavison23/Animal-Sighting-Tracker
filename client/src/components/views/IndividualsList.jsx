@@ -31,17 +31,39 @@ export default function IndividualsList() {
 
   return (
     <div>
-      <h2>All Individuals</h2>
+      <h2>Individuals Summary</h2>
+
       {individuals.map((ind) => (
-        <div key={ind.id} style={{ marginBottom: '12px' }}>
+        <div
+          key={ind.id}
+          style={{
+            border: '1px solid #ccc',
+            padding: '10px',
+            marginBottom: '10px',
+            borderRadius: '6px',
+          }}>
           <p>
-            <strong>Name:</strong> {ind.name}
+            <strong>Nickname:</strong> {ind.nickname}
           </p>
           <p>
-            <strong>Species:</strong> {ind.species}
+            <strong>Scientist:</strong> {ind.scientist}
           </p>
           <p>
-            <strong>Age:</strong> {ind.age}
+            <strong>Total Sightings:</strong> {ind.sighting_count}
+          </p>
+
+          <p>
+            <strong>First Sighting:</strong>{' '}
+            {ind.first_sighting
+              ? new Date(ind.first_sighting).toLocaleString()
+              : 'No sightings yet'}
+          </p>
+
+          <p>
+            <strong>Most Recent Sighting:</strong>{' '}
+            {ind.last_sighting
+              ? new Date(ind.last_sighting).toLocaleString()
+              : 'No sightings yet'}
           </p>
         </div>
       ))}
