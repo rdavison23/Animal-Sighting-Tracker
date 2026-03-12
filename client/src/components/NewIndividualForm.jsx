@@ -50,4 +50,47 @@ export default function NewIndividualForm() {
       setError(err.message);
     }
   }
+  return (
+    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+      <h2>Add New Individual</h2>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>{success}</p>}
+
+      <label>
+        Name*:
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </label>
+      <br />
+
+      <label>
+        Species*:
+        <input
+          type="text"
+          value={species}
+          onChange={(e) => setSpecies(e.target.value)}
+          required
+        />
+      </label>
+      <br />
+
+      <label>
+        Age*:
+        <input
+          type="number"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+          required
+        />
+      </label>
+      <br />
+
+      <button type="submit">Add Individual</button>
+    </form>
+  );
 }
