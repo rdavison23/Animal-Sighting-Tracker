@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
         sightings.email,
         sightings.individual_id,
         individuals.nickname,
-        individuals.scientist,
+        individuals.scientist_name,
         individuals.species_id
       FROM sightings
       JOIN individuals

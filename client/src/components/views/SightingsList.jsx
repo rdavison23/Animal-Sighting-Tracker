@@ -20,7 +20,7 @@ export default function SightingsList() {
 
       {sightings.map((sighting) => (
         <div
-          key={s.id}
+          key={sighting.id}
           style={{
             border: '1px solid #ccc',
             borderRadius: '8px',
