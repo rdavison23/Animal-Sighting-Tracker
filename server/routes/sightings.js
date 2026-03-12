@@ -5,9 +5,24 @@ const db = require('../db/db-connection');
 // GET all sighting
 router.get('/', async (req, res) => {
   try {
-    const sightings = await db.any(
-      'SELECT * FROM sightings ORDER BY sighted_at DESC'
-    );
+    const query = `
+      SELECT
+        sightings.id,
+        sightings.sighted_at,
+        sightings.location,
+        sightings.healthy,
+        sightings.email,
+        sightings.individual_id,
+        individuals.nickname,
+        individuals.scientist,
+        individuals.species_id
+      FROM sightings
+      JOIN individuals
+        ON sightings.individual_id = individuals.id
+      ORDER BY sightings.sighted_at DESC;
+    `;
+
+    const sightings = await db.any(query);
     res.json(sightings);
   } catch (err) {
     console.log('Error fetching sightings:', err);
