@@ -72,6 +72,7 @@ export default function NewSpeciesForm() {
       <form onSubmit={handleSubmit} style={{ maxWidth: '400px' }}>
         <label>Common Name:</label>
         <input
+          ref={nameInputRef}
           type="text"
           value={commonName}
           onChange={(e) => setCommonName(e.target.value)}
