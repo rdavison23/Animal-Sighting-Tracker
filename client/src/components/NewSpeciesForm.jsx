@@ -54,4 +54,56 @@ export default function NewSpeciesForm() {
       setError(err.message);
     }
   }
+  return (
+    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+      <h2>Add New Species</h2>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>{success}</p>}
+
+      <label>
+        Common Name*:
+        <input
+          type="text"
+          value={commonName}
+          onChange={(e) => setCommonName(e.target.value)}
+          required
+        />
+      </label>
+      <br />
+
+      <label>
+        Scientific Name*:
+        <input
+          type="text"
+          value={scientificName}
+          onChange={(e) => setScientificName(e.target.value)}
+          required
+        />
+      </label>
+      <br />
+
+      <label>
+        Estimated Population:
+        <input
+          type="number"
+          value={estimatedPopulation}
+          onChange={(e) => setEstimatedPopulation(e.target.value)}
+        />
+      </label>
+      <br />
+
+      <label>
+        Conservation Status (e.g. EN, CR, VU):
+        <input
+          type="text"
+          value={conservationStatus}
+          onChange={(e) => setConservationStatus(e.target.value)}
+        />
+      </label>
+      <br />
+
+      <button type="submit">Add Species</button>
+    </form>
+  );
 }
