@@ -56,6 +56,41 @@ router.get('/by-individual/:id', async (req, res) => {
   }
 });
 
+// GET sightings within a date range
+router.get('/search', async (req, res) => {
+  const { start, end } = req.query;
+
+  // Validate required query params
+  if (!start || !end) {
+    return res.status(400).json({
+      error: 'Both start and end dates are required.',
+    });
+  }
+
+  try {
+    const sightings = await db.any(
+      `SELECT
+         sightings.id,
+         sightings.sighted_at,
+         sightings.location,
+         sightings.healthy,
+         sightings.email,
+         sightings.individual_id,
+         individuals.nickname
+       FROM sightings
+       JOIN individuals ON sightings.individual_id = individuals.id
+       WHERE sighted_at BETWEEN $1 AND $2
+       ORDER BY sighted_at DESC`,
+      [start, end]
+    );
+
+    res.json(sightings);
+  } catch (err) {
+    console.error('Error searching sightings:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // GET sighting by :id
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
