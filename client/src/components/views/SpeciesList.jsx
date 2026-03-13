@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import NewSpeciesForm from '../forms/NewSpeciesForm';
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
@@ -11,14 +12,18 @@ export default function SpeciesList() {
   const [sightings, setSightings] = useState([]);
 
   // Load all species
-  useEffect(() => {
+  const loadSpecies = () => {
     fetch(`${API_BASE}/species`)
       .then((res) => res.json())
       .then((data) => setSpecies(data))
       .catch(() => setError('Could not load species.'));
+  };
+
+  useEffect(() => {
+    loadSpecies();
   }, []);
 
-  // Load individuals and sightings when a species is selected
+  // Load individuals + sightings when a species is selected
   useEffect(() => {
     if (!selectedSpecies) return;
 
@@ -38,10 +43,12 @@ export default function SpeciesList() {
 
   return (
     <div style={{ maxWidth: '700px', margin: '0 auto', padding: '20px' }}>
-      <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>
-        Species List
-      </h2>
+      {/* Species creation form */}
+      <NewSpeciesForm onCreated={loadSpecies} />
 
+      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Species</h2>
+
+      {/* Species list */}
       {species.map((sp) => {
         const isSelected = selectedSpecies?.id === sp.id;
 
@@ -73,6 +80,14 @@ export default function SpeciesList() {
             </p>
             <p>
               <strong>Scientific Name:</strong> {sp.scientific_name}
+            </p>
+            <p>
+              <strong>Estimated Population:</strong>{' '}
+              {sp.estimated_population ?? 'Unknown'}
+            </p>
+            <p>
+              <strong>Conservation Status:</strong>{' '}
+              {sp.conservation_status ?? 'Unknown'}
             </p>
           </div>
         );
