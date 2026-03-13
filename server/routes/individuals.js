@@ -16,6 +16,10 @@ router.get('/', async (req, res) => {
 router.get('/by-species/:id', async (req, res) => {
   const { id } = req.params;
 
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
+
   try {
     const individuals = await db.any(
       `SELECT *

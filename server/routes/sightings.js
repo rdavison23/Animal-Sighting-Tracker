@@ -34,6 +34,10 @@ router.get('/', async (req, res) => {
 router.get('/by-individual/:id', async (req, res) => {
   const { id } = req.params;
 
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
+
   try {
     const query = `
       SELECT
@@ -94,6 +98,11 @@ router.get('/search', async (req, res) => {
 // GET sighting by :id
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
+
+  // Validate ID format
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
 
   try {
     const query = `
@@ -185,6 +194,10 @@ router.put('/:id', async (req, res) => {
 // DELETE sighting by :id
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
 
   try {
     const query = `
