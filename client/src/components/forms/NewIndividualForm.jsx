@@ -12,6 +12,9 @@ export default function NewIndividualForm() {
 
   const nicknameInputRef = useRef(null);
 
+  // Use environment variable
+  const API_BASE = import.meta.env.VITE_API_BASE;
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -31,7 +34,7 @@ export default function NewIndividualForm() {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/individuals', {
+      const response = await fetch(`${API_BASE}/individuals`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newIndividual),
