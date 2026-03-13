@@ -2,15 +2,15 @@ import { useState, useRef } from 'react';
 
 export default function NewIndividualForm() {
   // Form fields
-  const [name, setName] = useState('');
-  const [species, setSpecies] = useState('');
-  const [age, setAge] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [scientistName, setScientistName] = useState('');
+  const [speciesId, setSpeciesId] = useState('');
 
   // Messages
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  const nameInputRef = useRef(null);
+  const nicknameInputRef = useRef(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -18,15 +18,16 @@ export default function NewIndividualForm() {
     setError(null);
     setSuccess(null);
 
-    if (!name || !species || !age) {
+    // Validate required fields
+    if (!nickname || !speciesId) {
       setError('Please fill in all required fields.');
       return;
     }
 
     const newIndividual = {
-      name,
-      species,
-      age: Number(age),
+      nickname,
+      scientist_name: scientistName,
+      species_id: Number(speciesId),
     };
 
     try {
@@ -45,16 +46,17 @@ export default function NewIndividualForm() {
       setSuccess('Individual added successfully!');
 
       // Clear form
-      setName('');
-      setSpecies('');
-      setAge('');
+      setNickname('');
+      setScientistName('');
+      setSpeciesId('');
 
       // Move cursor back to the first field
-      nameInputRef.current.focus();
+      nicknameInputRef.current.focus();
     } catch (err) {
       setError(err.message);
     }
   }
+
   return (
     <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
       <h2>Add New Individual</h2>
@@ -63,34 +65,34 @@ export default function NewIndividualForm() {
       {success && <p style={{ color: 'green' }}>{success}</p>}
 
       <label>
-        Name*:
+        Nickname:
         <input
-          ref={nameInputRef}
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          ref={nicknameInputRef}
+          name="nickname"
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
           required
         />
       </label>
       <br />
 
       <label>
-        Species*:
+        Scientist Name:
         <input
-          type="text"
-          value={species}
-          onChange={(e) => setSpecies(e.target.value)}
-          required
+          name="scientist_name"
+          value={scientistName}
+          onChange={(e) => setScientistName(e.target.value)}
         />
       </label>
       <br />
 
       <label>
-        Age*:
+        Species ID:
         <input
+          name="species_id"
           type="number"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
+          value={speciesId}
+          onChange={(e) => setSpeciesId(e.target.value)}
           required
         />
       </label>
