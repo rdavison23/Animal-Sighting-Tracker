@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import NewSpeciesForm from '../forms/NewSpeciesForm';
+
 const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function SpeciesList() {
@@ -6,41 +8,31 @@ export default function SpeciesList() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_BASE}:3001/species`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch species');
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setSpecies(data);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError('Could not load species.');
-      });
+    fetch(`${API_BASE}/species`)
+      .then((res) => res.json())
+      .then((data) => setSpecies(data))
+      .catch(() => setError('Could not load species.'));
   }, []);
 
-  if (error) {
-    return <p style={{ color: 'red' }}>{error}</p>;
-  }
-
-  if (species.length === 0) {
-    return <p>No species found.</p>;
-  }
+  if (error) return <p>{error}</p>;
+  if (species.length === 0) return <p>No species found.</p>;
 
   return (
-    <div>
-      <h2>All Species</h2>
+    <div style={{ maxWidth: '700px', margin: '0 auto', padding: '20px' }}>
+      <NewSpeciesForm />
+
+      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Species</h2>
+
       {species.map((sp) => (
         <div
           key={sp.id}
           style={{
-            border: '1px solid #ccc',
-            padding: '10px',
-            marginBottom: '10px',
-            borderRadius: '6px',
+            background: '#fff',
+            border: '1px solid #ddd',
+            padding: '16px',
+            marginBottom: '16px',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
           }}>
           <p>
             <strong>Common Name:</strong> {sp.common_name}
@@ -49,10 +41,12 @@ export default function SpeciesList() {
             <strong>Scientific Name:</strong> {sp.scientific_name}
           </p>
           <p>
-            <strong>Estimated Population:</strong> {sp.estimated_population}
+            <strong>Estimated Population:</strong>{' '}
+            {sp.estimated_population ?? 'Unknown'}
           </p>
           <p>
-            <strong>Status:</strong> {sp.conservation_status}
+            <strong>Conservation Status:</strong>{' '}
+            {sp.conservation_status ?? 'Unknown'}
           </p>
         </div>
       ))}
