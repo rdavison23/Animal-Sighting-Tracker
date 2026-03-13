@@ -30,6 +30,32 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET all sightings for a specific individual
+router.get('/by-individual/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = `
+      SELECT
+        sightings.id,
+        sightings.sighted_at,
+        sightings.location,
+        sightings.healthy,
+        sightings.email,
+        sightings.individual_id
+      FROM sightings
+      WHERE individual_id = $1
+      ORDER BY sighted_at DESC;
+    `;
+
+    const sightings = await db.any(query, [id]);
+    res.json(sightings);
+  } catch (err) {
+    console.error('Error fetching sightings by individual:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // GET sighting by :id
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
