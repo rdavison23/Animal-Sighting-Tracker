@@ -1,36 +1,35 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
+
 const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function NewSightingForm() {
-  // State for each form field
   const [individuals, setIndividuals] = useState([]);
+
+  // Form fields
   const [individualId, setIndividualId] = useState('');
   const [sightedAt, setSightedAt] = useState('');
   const [location, setLocation] = useState('');
-  const [healthy, setHealthy] = useState(true);
+  const [healthy, setHealthy] = useState(false);
   const [email, setEmail] = useState('');
 
-  // State for messages
+  // Messages
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
-  const nameInputRef = useRef(null);
 
   // Load individuals for dropdown
   useEffect(() => {
     fetch(`${API_BASE}/individuals`)
       .then((res) => res.json())
       .then((data) => setIndividuals(data))
-      .catch(() => setError('Could not load individuals.'));
+      .catch(() => setError('Failed to load individuals.'));
   }, []);
 
   async function handleSubmit(e) {
-    e.preventDefault(); // prevents page reload
+    e.preventDefault();
 
     setError(null);
     setSuccess(null);
 
-    // Basic validation
     if (!individualId || !sightedAt || !location || !email) {
       setError('Please fill in all required fields.');
       return;
@@ -45,7 +44,7 @@ export default function NewSightingForm() {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/sightings', {
+      const response = await fetch(`${API_BASE}/sightings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newSighting),
@@ -56,91 +55,86 @@ export default function NewSightingForm() {
         throw new Error(data.error || 'Failed to create sighting');
       }
 
-      const created = await response.json();
+      await response.json();
       setSuccess('Sighting added successfully!');
 
       // Clear form
       setIndividualId('');
       setSightedAt('');
       setLocation('');
-      setHealthy(true);
+      setHealthy(false);
       setEmail('');
-
-      nameInputRef.current.focus();
     } catch (err) {
       setError(err.message);
     }
   }
 
   return (
-    <div style={{ padding: '20px' }}>
+    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
       <h2>Add New Sighting</h2>
 
-      <form onSubmit={handleSubmit} style={{ maxWidth: '400px' }}>
-        <label>Location:</label>
-        <input
-          ref={nameInputRef}
-          type="text"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          required
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
-        />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>{success}</p>}
 
-        <label>Date & Time:</label>
+      <label>
+        Individual:
+        <select
+          value={individualId}
+          onChange={(e) => setIndividualId(e.target.value)}
+          required>
+          <option value="">Select an individual</option>
+          {individuals.map((ind) => (
+            <option key={ind.id} value={ind.id}>
+              {ind.nickname} (ID {ind.id})
+            </option>
+          ))}
+        </select>
+      </label>
+      <br />
+
+      <label>
+        Sighted At:
         <input
           type="datetime-local"
           value={sightedAt}
           onChange={(e) => setSightedAt(e.target.value)}
           required
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
         />
+      </label>
+      <br />
 
-        <label>Healthy?</label>
-        <select
-          value={healthy}
-          onChange={(e) => setHealthy(e.target.value === 'true')}
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}>
-          <option value="true">Yes</option>
-          <option value="false">No</option>
-        </select>
-
-        <label>Individual:</label>
-        <select
-          value={individualId}
-          onChange={(e) => setIndividualId(e.target.value)}
+      <label>
+        Location:
+        <input
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
           required
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}>
-          <option value="">Select an animal</option>
-          {individuals.map((i) => (
-            <option key={i.id} value={i.id}>
-              {i.nickname || i.name} (ID {i.id})
-            </option>
-          ))}
-        </select>
+        />
+      </label>
+      <br />
 
-        <label>Email:</label>
+      <label>
+        Healthy:
+        <input
+          type="checkbox"
+          checked={healthy}
+          onChange={(e) => setHealthy(e.target.checked)}
+        />
+      </label>
+      <br />
+
+      <label>
+        Email:
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
         />
+      </label>
+      <br />
 
-        <button
-          type="submit"
-          style={{
-            padding: '10px 15px',
-            backgroundColor: 'green',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-          }}>
-          Submit
-        </button>
-      </form>
-    </div>
+      <button type="submit">Add Sighting</button>
+    </form>
   );
 }
