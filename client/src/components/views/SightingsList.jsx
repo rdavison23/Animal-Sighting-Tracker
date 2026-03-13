@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
+import NewSightingForm from '../forms/NewSightingForm';
 
 const API_BASE = import.meta.env.VITE_API_BASE;
+
 export default function SightingsList() {
   const [sightings, setSightings] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log('API_BASE =', API_BASE);
-    console.log('Fetching:', `${API_BASE}/sightings`);
     fetch(`${API_BASE}/sightings`)
       .then((res) => res.json())
       .then((data) => setSightings(data))
@@ -15,37 +15,45 @@ export default function SightingsList() {
   }, []);
 
   if (error) return <p>{error}</p>;
-  if (sightings.length === 0) return <p>No sightings yet.</p>;
+  if (sightings.length === 0) return <p>No sightings found.</p>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>All Sightings</h1>
+    <div style={{ maxWidth: '700px', margin: '0 auto', padding: '20px' }}>
+      <NewSightingForm />
 
-      {sightings.map((sighting) => (
+      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Sightings</h2>
+
+      {sightings.map((s) => (
         <div
-          key={sighting.id}
+          key={s.id}
           style={{
-            border: '1px solid #ccc',
+            background: '#fff',
+            border: '1px solid #ddd',
+            padding: '16px',
+            marginBottom: '16px',
             borderRadius: '8px',
-            padding: '15px',
-            marginBottom: '15px',
-            backgroundColor: '#fafafa',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
           }}>
           <p>
-            <strong>Nickname:</strong> {sighting.nickname}
+            <strong>Nickname:</strong> {s.nickname}
           </p>
           <p>
-            <strong>Location:</strong> {sighting.location}
+            <strong>Scientist:</strong> {s.scientist_name}
           </p>
           <p>
-            <strong>Date:</strong>{' '}
-            {new Date(sighting.sighted_at).toLocaleString()}
+            <strong>Species ID:</strong> {s.species_id}
           </p>
           <p>
-            <strong>Healthy:</strong> {sighting.healthy ? 'Yes' : 'No'}
+            <strong>Date:</strong> {new Date(s.sighted_at).toLocaleString()}
           </p>
           <p>
-            <strong>Email:</strong> {sighting.email}
+            <strong>Location:</strong> {s.location}
+          </p>
+          <p>
+            <strong>Healthy:</strong> {s.healthy ? 'Yes' : 'No'}
+          </p>
+          <p>
+            <strong>Email:</strong> {s.email}
           </p>
         </div>
       ))}
