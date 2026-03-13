@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
 const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function IndividualsList() {
@@ -35,38 +37,41 @@ export default function IndividualsList() {
       <h2>Individuals Summary</h2>
 
       {individuals.map((ind) => (
-        <div
+        <Link
           key={ind.id}
-          style={{
-            border: '1px solid #ccc',
-            padding: '10px',
-            marginBottom: '10px',
-            borderRadius: '6px',
-          }}>
-          <p>
-            <strong>Nickname:</strong> {ind.nickname}
-          </p>
-          <p>
-            <strong>Scientist:</strong> {ind.scientist}
-          </p>
-          <p>
-            <strong>Total Sightings:</strong> {ind.sighting_count}
-          </p>
-
-          <p>
-            <strong>First Sighting:</strong>{' '}
-            {ind.first_sighting
-              ? new Date(ind.first_sighting).toLocaleString()
-              : 'No sightings yet'}
-          </p>
-
-          <p>
-            <strong>Most Recent Sighting:</strong>{' '}
-            {ind.last_sighting
-              ? new Date(ind.last_sighting).toLocaleString()
-              : 'No sightings yet'}
-          </p>
-        </div>
+          to={`/individuals/${ind.id}`}
+          style={{ textDecoration: 'none', color: 'inherit' }}>
+          <div
+            style={{
+              border: '1px solid #ccc',
+              padding: '10px',
+              marginBottom: '10px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+            }}>
+            <p>
+              <strong>Nickname:</strong> {ind.nickname}
+            </p>
+            <p>
+              <strong>Scientist:</strong> {ind.scientist}
+            </p>
+            <p>
+              <strong>Total Sightings:</strong> {ind.sighting_count}
+            </p>
+            <p>
+              <strong>First Sighting:</strong>{' '}
+              {ind.first_sighting
+                ? new Date(ind.first_sighting).toLocaleString()
+                : 'No sightings yet'}
+            </p>
+            <p>
+              <strong>Most Recent Sighting:</strong>{' '}
+              {ind.last_sighting
+                ? new Date(ind.last_sighting).toLocaleString()
+                : 'No sightings yet'}
+            </p>
+          </div>
+        </Link>
       ))}
     </div>
   );
