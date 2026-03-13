@@ -85,15 +85,24 @@ router.post('/', async (req, res) => {
 });
 // PUT update an individual
 router.put('/:id', async (req, res) => {
-  const { name, species, age } = req.body;
+  const { nickname, scientist_name, species_id } = req.body;
+
+  // Validate required fields
+  if (!nickname || !species_id) {
+    return res.status(400).json({
+      error: 'nickname and species_id are required.',
+    });
+  }
 
   try {
     const updated = await db.oneOrNone(
       `UPDATE individuals
-       SET name = $1, species = $2, age = $3
+       SET nickname = $1,
+           scientist_name = $2,
+           species_id = $3
        WHERE id = $4
        RETURNING *`,
-      [name, species, age, req.params.id]
+      [nickname, scientist_name || null, species_id, req.params.id]
     );
 
     if (!updated) {
