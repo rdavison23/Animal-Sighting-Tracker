@@ -1,34 +1,76 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-import SightingsList from './components/views/SightingsList';
-import SingleSighting from './components/views/SingleSighting';
+import { useState } from 'react';
 import IndividualsList from './components/views/IndividualsList';
+import SightingsList from './components/views/SightingsList';
 import SpeciesList from './components/views/SpeciesList';
-import SingleIndividual from './components/views/SingleIndividual';
 
-import NewSightingForm from './components/forms/NewSightingForm';
-import NewIndividualForm from './components/forms/NewIndividualForm';
-import NewSpeciesForm from './components/forms/NewSpeciesForm';
+function App() {
+  const [view, setView] = useState('individuals');
 
-export default function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Sightings */}
-        <Route path="/" element={<SightingsList />} />
-        <Route path="/sightings/:id" element={<SingleSighting />} />
-        <Route path="/new-sighting" element={<NewSightingForm />} />
-        <Route path="/sightings" element={<SightingsList />} />
+    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '20px' }}>
+      {/* NAVIGATION BAR */}
+      <header
+        style={{
+          background: '#1e293b',
+          padding: '15px 20px',
+          borderRadius: '10px',
+          marginBottom: '25px',
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '20px',
+        }}>
+        <button
+          onClick={() => setView('individuals')}
+          style={{
+            background: view === 'individuals' ? '#3b82f6' : '#334155',
+            color: 'white',
+            border: 'none',
+            padding: '10px 18px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '15px',
+            transition: '0.2s',
+          }}>
+          Individuals
+        </button>
 
-        {/* Individuals */}
-        <Route path="/individuals" element={<IndividualsList />} />
-        <Route path="/individuals/new" element={<NewIndividualForm />} />
-        <Route path="/individuals/:id" element={<SingleIndividual />} />
+        <button
+          onClick={() => setView('sightings')}
+          style={{
+            background: view === 'sightings' ? '#3b82f6' : '#334155',
+            color: 'white',
+            border: 'none',
+            padding: '10px 18px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '15px',
+            transition: '0.2s',
+          }}>
+          Sightings
+        </button>
 
-        {/* Species */}
-        <Route path="/species" element={<SpeciesList />} />
-        <Route path="/species/new" element={<NewSpeciesForm />} />
-      </Routes>
-    </Router>
+        <button
+          onClick={() => setView('species')}
+          style={{
+            background: view === 'species' ? '#3b82f6' : '#334155',
+            color: 'white',
+            border: 'none',
+            padding: '10px 18px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '15px',
+            transition: '0.2s',
+          }}>
+          Species
+        </button>
+      </header>
+
+      {/* MAIN CONTENT */}
+      {view === 'individuals' && <IndividualsList />}
+      {view === 'sightings' && <SightingsList />}
+      {view === 'species' && <SpeciesList />}
+    </div>
   );
 }
+
+export default App;
