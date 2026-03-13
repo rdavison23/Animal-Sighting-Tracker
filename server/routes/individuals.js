@@ -19,7 +19,7 @@ router.get('/summary', async (req, res) => {
       SELECT 
         i.id,
         i.nickname,
-        i.scientist,
+        i.scientist_name,
         i.species_id,
         COUNT(s.id) AS sighting_count,
         MIN(s.sighted_at) AS first_sighting,
