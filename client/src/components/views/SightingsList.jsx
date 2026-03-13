@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import NewSightingForm from '../forms/NewSightingForm';
+import SightingsDateSearch from './SightingsDateSearch';
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function SightingsList() {
   const [sightings, setSightings] = useState([]);
   const [error, setError] = useState(null);
+  const [filteredSightings, setFilteredSightings] = useState(null);
 
   useEffect(() => {
     fetch(`${API_BASE}/sightings`)
@@ -17,13 +19,35 @@ export default function SightingsList() {
   if (error) return <p>{error}</p>;
   if (sightings.length === 0) return <p>No sightings found.</p>;
 
+  // If filtered results exist, show them; otherwise show all sightings
+  const sightingsToShow = filteredSightings || sightings;
+
   return (
     <div style={{ maxWidth: '700px', margin: '0 auto', padding: '20px' }}>
       <NewSightingForm />
 
+      {/* Date Range Search UI */}
+      <SightingsDateSearch onResults={setFilteredSightings} />
+
+      {/* Clear Search Button */}
+      {filteredSightings && (
+        <button
+          onClick={() => setFilteredSightings(null)}
+          style={{
+            marginBottom: '20px',
+            padding: '8px 12px',
+            background: '#ccc',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+          }}>
+          Clear Search
+        </button>
+      )}
+
       <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Sightings</h2>
 
-      {sightings.map((s) => (
+      {sightingsToShow.map((s) => (
         <div
           key={s.id}
           style={{
