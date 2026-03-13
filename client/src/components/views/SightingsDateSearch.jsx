@@ -11,8 +11,20 @@ export default function SightingsDateSearch({ onResults }) {
     e.preventDefault();
     setError(null);
 
+    console.log(
+      'FETCHING:',
+      `${API_BASE}/sightings/search?start=${start}&end=${end}`
+    );
+
+    // Validate both dates exist
     if (!start || !end) {
       setError('Please select both start and end dates.');
+      return;
+    }
+
+    // Validate start <= end
+    if (new Date(start) > new Date(end)) {
+      setError('Start date cannot be after end date.');
       return;
     }
 
@@ -20,6 +32,8 @@ export default function SightingsDateSearch({ onResults }) {
       const response = await fetch(
         `${API_BASE}/sightings/search?start=${start}&end=${end}`
       );
+
+      console.log('RESPONSE STATUS:', response.status);
 
       if (!response.ok) {
         const data = await response.json();
