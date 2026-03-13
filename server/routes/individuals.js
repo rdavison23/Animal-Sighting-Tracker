@@ -60,14 +60,21 @@ router.get('/:id', async (req, res) => {
 
 // POST create a new individual
 router.post('/', async (req, res) => {
-  const { name, species, age } = req.body;
+  const { nickname, scientist_name, species_id } = req.body;
+
+  // Validate required fields
+  if (!nickname || !species_id) {
+    return res.status(400).json({
+      error: 'nickname and species_id are required.',
+    });
+  }
 
   try {
     const newIndividual = await db.one(
-      `INSERT INTO individuals (name, species, age)
-       VALUES ($1, $2, $3)
+      `INSERT INTO individuals (nickname, scientist_name, species_id, created_at)
+       VALUES ($1, $2, $3, NOW())
        RETURNING *`,
-      [name, species, age]
+      [nickname, scientist_name || null, species_id]
     );
 
     res.status(201).json(newIndividual);
