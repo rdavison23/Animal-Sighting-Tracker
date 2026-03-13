@@ -12,6 +12,25 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch individuals' });
   }
 });
+// GET all individuals for a specific species
+router.get('/by-species/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const individuals = await db.any(
+      `SELECT *
+       FROM individuals
+       WHERE species_id = $1
+       ORDER BY id`,
+      [id]
+    );
+
+    res.json(individuals);
+  } catch (err) {
+    console.error('Error fetching individuals by species:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 // GET summary
 router.get('/summary', async (req, res) => {
   try {
