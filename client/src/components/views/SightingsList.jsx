@@ -1,48 +1,65 @@
 import { useEffect, useState } from 'react';
+import NewSightingForm from '../forms/NewSightingForm';
+import SightingsDateSearch from './SightingsDateSearch';
+
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function SightingsList() {
   const [sightings, setSightings] = useState([]);
   const [error, setError] = useState(null);
+  const [filteredSightings, setFilteredSightings] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/sightings')
+    fetch(`${API_BASE}/sightings`)
       .then((res) => res.json())
       .then((data) => setSightings(data))
       .catch(() => setError('Could not load sightings.'));
   }, []);
 
   if (error) return <p>{error}</p>;
-  if (sightings.length === 0) return <p>No sightings yet.</p>;
+  if (sightings.length === 0) return <p>No sightings found.</p>;
+
+  const sightingsToShow = filteredSightings || sightings;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>All Sightings</h1>
+    <div className="page-container">
+      <NewSightingForm />
 
-      {sightings.map((sighting) => (
-        <div
-          key={s.id}
-          style={{
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-            padding: '15px',
-            marginBottom: '15px',
-            backgroundColor: '#fafafa',
-          }}>
+      <SightingsDateSearch onResults={setFilteredSightings} />
+
+      {filteredSightings && (
+        <button
+          onClick={() => setFilteredSightings(null)}
+          className="nav-btn"
+          style={{ background: '#ccc', color: '#000', marginBottom: '20px' }}>
+          Clear Search
+        </button>
+      )}
+
+      <h2 className="section-title">Sightings</h2>
+
+      {sightingsToShow.map((s) => (
+        <div key={s.id} className="card">
           <p>
-            <strong>Nickname:</strong> {sighting.nickname}
+            <strong>Nickname:</strong> {s.nickname}
           </p>
           <p>
-            <strong>Location:</strong> {sighting.location}
+            <strong>Scientist:</strong> {s.scientist_name}
           </p>
           <p>
-            <strong>Date:</strong>{' '}
-            {new Date(sighting.sighted_at).toLocaleString()}
+            <strong>Species ID:</strong> {s.species_id}
           </p>
           <p>
-            <strong>Healthy:</strong> {sighting.healthy ? 'Yes' : 'No'}
+            <strong>Date:</strong> {new Date(s.sighted_at).toLocaleString()}
           </p>
           <p>
-            <strong>Email:</strong> {sighting.email}
+            <strong>Location:</strong> {s.location}
+          </p>
+          <p>
+            <strong>Healthy:</strong> {s.healthy ? 'Yes' : 'No'}
+          </p>
+          <p>
+            <strong>Email:</strong> {s.email}
           </p>
         </div>
       ))}

@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function NewIndividualForm() {
-  // Form fields
-  const [name, setName] = useState('');
-  const [species, setSpecies] = useState('');
-  const [age, setAge] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [scientistName, setScientistName] = useState('');
+  const [speciesId, setSpeciesId] = useState('');
 
-  // Messages
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  const nicknameInputRef = useRef(null);
+
+  const API_BASE = import.meta.env.VITE_API_BASE;
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -16,19 +18,19 @@ export default function NewIndividualForm() {
     setError(null);
     setSuccess(null);
 
-    if (!name || !species || !age) {
+    if (!nickname || !speciesId) {
       setError('Please fill in all required fields.');
       return;
     }
 
     const newIndividual = {
-      name,
-      species,
-      age: Number(age),
+      nickname,
+      scientist_name: scientistName,
+      species_id: Number(speciesId),
     };
 
     try {
-      const response = await fetch('http://localhost:3001/individuals', {
+      const response = await fetch(`${API_BASE}/individuals`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newIndividual),
@@ -42,53 +44,45 @@ export default function NewIndividualForm() {
       await response.json();
       setSuccess('Individual added successfully!');
 
-      // Clear form
-      setName('');
-      setSpecies('');
-      setAge('');
+      setNickname('');
+      setScientistName('');
+      setSpeciesId('');
+
+      nicknameInputRef.current.focus();
     } catch (err) {
       setError(err.message);
     }
   }
+
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-      <h2>Add New Individual</h2>
+    <form onSubmit={handleSubmit} className="form-card">
+      <h3>Add New Individual</h3>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
 
-      <label>
-        Name*:
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-      </label>
-      <br />
+      <label>Nickname</label>
+      <input
+        ref={nicknameInputRef}
+        value={nickname}
+        onChange={(e) => setNickname(e.target.value)}
+        required
+      />
 
-      <label>
-        Species*:
-        <input
-          type="text"
-          value={species}
-          onChange={(e) => setSpecies(e.target.value)}
-          required
-        />
-      </label>
-      <br />
+      <label>Scientist Name</label>
+      <input
+        value={scientistName}
+        onChange={(e) => setScientistName(e.target.value)}
+        required
+      />
 
-      <label>
-        Age*:
-        <input
-          type="number"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-          required
-        />
-      </label>
-      <br />
+      <label>Species ID</label>
+      <input
+        type="number"
+        value={speciesId}
+        onChange={(e) => setSpeciesId(e.target.value)}
+        required
+      />
 
       <button type="submit">Add Individual</button>
     </form>

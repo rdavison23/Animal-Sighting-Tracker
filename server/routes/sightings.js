@@ -2,7 +2,44 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/db-connection');
 
-// GET all sighting
+router.get('/search', async (req, res) => {
+  const { start, end } = req.query;
+
+  console.log('SEARCH ROUTE PARAMS:', start, end);
+
+  if (!start || !end) {
+    return res
+      .status(400)
+      .json({ error: 'Both start and end dates are required.' });
+  }
+
+  try {
+    console.log('RUNNING SEARCH QUERY...');
+    const sightings = await db.any(
+      `SELECT
+         sightings.id,
+         sightings.sighted_at,
+         sightings.location,
+         sightings.healthy,
+         sightings.email,
+         sightings.individual_id,
+         individuals.nickname
+       FROM sightings
+       JOIN individuals ON sightings.individual_id = individuals.id
+       WHERE sighted_at BETWEEN $1::timestamp AND $2::timestamp
+       ORDER BY sighted_at DESC`,
+      [start, end]
+    );
+
+    console.log('SEARCH RESULTS:', sightings.length);
+    res.json(sightings);
+  } catch (err) {
+    console.error('Error searching sightings:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// GET all sightings
 router.get('/', async (req, res) => {
   try {
     const query = `
@@ -14,7 +51,7 @@ router.get('/', async (req, res) => {
         sightings.email,
         sightings.individual_id,
         individuals.nickname,
-        individuals.scientist,
+        individuals.scientist_name,
         individuals.species_id
       FROM sightings
       JOIN individuals
@@ -30,9 +67,77 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET sightings within a date range
+router.get('/search', async (req, res) => {
+  const { start, end } = req.query;
+
+  if (!start || !end) {
+    return res
+      .status(400)
+      .json({ error: 'Both start and end dates are required.' });
+  }
+
+  try {
+    const sightings = await db.any(
+      `SELECT
+         sightings.id,
+         sightings.sighted_at,
+         sightings.location,
+         sightings.healthy,
+         sightings.email,
+         sightings.individual_id,
+         individuals.nickname
+       FROM sightings
+       JOIN individuals ON sightings.individual_id = individuals.id
+       WHERE sighted_at BETWEEN $1::timestamp AND $2::timestamp
+       ORDER BY sighted_at DESC`,
+      [start, end]
+    );
+
+    res.json(sightings);
+  } catch (err) {
+    console.error('Error searching sightings:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// GET all sightings for a specific individual
+router.get('/by-individual/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
+
+  try {
+    const query = `
+      SELECT
+        sightings.id,
+        sightings.sighted_at,
+        sightings.location,
+        sightings.healthy,
+        sightings.email,
+        sightings.individual_id
+      FROM sightings
+      WHERE individual_id = $1
+      ORDER BY sighted_at DESC;
+    `;
+
+    const sightings = await db.any(query, [id]);
+    res.json(sightings);
+  } catch (err) {
+    console.error('Error fetching sightings by individual:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // GET sighting by :id
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
 
   try {
     const query = `
@@ -58,7 +163,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// post sighting
+// POST create a new sighting
 router.post('/', async (req, res) => {
   const { individual_id, sighted_at, location, healthy, email } = req.body;
 
@@ -85,7 +190,6 @@ router.post('/', async (req, res) => {
 });
 
 // UPDATE sighting by :id
-
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { individual_id, sighted_at, location, healthy, email } = req.body;
@@ -124,6 +228,10 @@ router.put('/:id', async (req, res) => {
 // DELETE sighting by :id
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
 
   try {
     const query = `

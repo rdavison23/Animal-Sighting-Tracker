@@ -1,25 +1,43 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-import SightingsList from './components/views/SightingsList';
-import SingleSighting from './components/views/SingleSighting';
-import NewSightingForm from './components/forms/NewSightingForm';
-
+import { useState } from 'react';
+import './App.css';
 import IndividualsList from './components/views/IndividualsList';
-import SingleIndividual from './components/views/SingleIndividual';
+import SightingsList from './components/views/SightingsList';
+import SpeciesList from './components/views/SpeciesList';
 
-export default function App() {
+function App() {
+  const [view, setView] = useState('individuals');
+
   return (
-    <Router>
-      <Routes>
-        {/* Sightings */}
-        <Route path="/" element={<SightingsList />} />
-        <Route path="/sightings/:id" element={<SingleSighting />} />
-        <Route path="/new-sighting" element={<NewSightingForm />} />
+    <div style={{ minHeight: '100vh' }}>
+      {/* NAV BAR */}
+      <header className="navbar">
+        <button
+          onClick={() => setView('individuals')}
+          className={`nav-btn ${view === 'individuals' ? 'active' : ''}`}>
+          Individuals
+        </button>
 
-        {/* Individuals */}
-        <Route path="/individuals" element={<IndividualsList />} />
-        <Route path="/individuals/:id" element={<SingleIndividual />} />
-      </Routes>
-    </Router>
+        <button
+          onClick={() => setView('sightings')}
+          className={`nav-btn ${view === 'sightings' ? 'active' : ''}`}>
+          Sightings
+        </button>
+
+        <button
+          onClick={() => setView('species')}
+          className={`nav-btn ${view === 'species' ? 'active' : ''}`}>
+          Species
+        </button>
+      </header>
+
+      {/* PAGE CONTAINER */}
+      <main className="page-container">
+        {view === 'individuals' && <IndividualsList />}
+        {view === 'sightings' && <SightingsList />}
+        {view === 'species' && <SpeciesList />}
+      </main>
+    </div>
   );
 }
+
+export default App;
