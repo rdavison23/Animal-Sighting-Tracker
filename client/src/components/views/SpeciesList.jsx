@@ -11,7 +11,6 @@ export default function SpeciesList() {
   const [individuals, setIndividuals] = useState([]);
   const [sightings, setSightings] = useState([]);
 
-  // Load all species
   const loadSpecies = () => {
     fetch(`${API_BASE}/species`)
       .then((res) => res.json())
@@ -23,7 +22,6 @@ export default function SpeciesList() {
     loadSpecies();
   }, []);
 
-  // Load individuals + sightings when a species is selected
   useEffect(() => {
     if (!selectedSpecies) return;
 
@@ -42,39 +40,20 @@ export default function SpeciesList() {
   if (species.length === 0) return <p>No species found.</p>;
 
   return (
-    <div style={{ maxWidth: '700px', margin: '0 auto', padding: '20px' }}>
-      {/* Species creation form */}
+    <div className="page-container">
       <NewSpeciesForm onCreated={loadSpecies} />
 
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Species</h2>
+      <h2 className="section-title">Species</h2>
 
-      {/* Species list */}
       {species.map((sp) => {
         const isSelected = selectedSpecies?.id === sp.id;
 
         return (
           <div
             key={sp.id}
+            className={`card ${isSelected ? 'selected' : ''}`}
             onClick={() => setSelectedSpecies(sp)}
-            style={{
-              background: isSelected ? '#eef6ff' : '#fff',
-              border: isSelected ? '2px solid #4a90e2' : '1px solid #ddd',
-              padding: '16px',
-              marginBottom: '16px',
-              borderRadius: '8px',
-              boxShadow: isSelected
-                ? '0 4px 12px rgba(0,0,0,0.15)'
-                : '0 2px 4px rgba(0,0,0,0.05)',
-              transition:
-                'transform 0.15s ease, box-shadow 0.15s ease, border 0.15s ease',
-              cursor: 'pointer',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.01)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}>
+            style={{ cursor: 'pointer' }}>
             <p>
               <strong>Common Name:</strong> {sp.common_name}
             </p>
@@ -93,37 +72,19 @@ export default function SpeciesList() {
         );
       })}
 
-      {/* DETAILS PANEL */}
       {selectedSpecies && (
-        <div
-          style={{
-            marginTop: '20px',
-            padding: '20px',
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-            background: '#f9f9f9',
-            animation: 'slideDown 0.3s ease-out',
-          }}>
+        <div className="card details-card">
           <h3>Details for {selectedSpecies.common_name}</h3>
 
           <p>
             <strong>Scientific Name:</strong> {selectedSpecies.scientific_name}
           </p>
 
-          {/* Individuals */}
           <h4 style={{ marginTop: '20px' }}>Individuals of this Species</h4>
 
           {individuals.length > 0 ? (
             individuals.map((ind) => (
-              <div
-                key={ind.id}
-                style={{
-                  background: '#fff',
-                  border: '1px solid #ddd',
-                  padding: '12px',
-                  marginBottom: '10px',
-                  borderRadius: '6px',
-                }}>
+              <div key={ind.id} className="card">
                 <p>
                   <strong>Nickname:</strong> {ind.nickname}
                 </p>
@@ -136,20 +97,11 @@ export default function SpeciesList() {
             <p>No individuals found.</p>
           )}
 
-          {/* Sightings */}
           <h4 style={{ marginTop: '20px' }}>Sightings of this Species</h4>
 
           {sightings.length > 0 ? (
             sightings.map((s) => (
-              <div
-                key={s.id}
-                style={{
-                  background: '#fff',
-                  border: '1px solid #ddd',
-                  padding: '12px',
-                  marginBottom: '10px',
-                  borderRadius: '6px',
-                }}>
+              <div key={s.id} className="card">
                 <p>
                   <strong>Date:</strong>{' '}
                   {new Date(s.sighted_at).toLocaleString()}
@@ -172,35 +124,11 @@ export default function SpeciesList() {
               setIndividuals([]);
               setSightings([]);
             }}
-            style={{
-              marginTop: '10px',
-              padding: '8px 12px',
-              borderRadius: '6px',
-              border: 'none',
-              background: '#333',
-              color: 'white',
-              cursor: 'pointer',
-            }}>
+            className="nav-btn close-btn">
             Close
           </button>
         </div>
       )}
-
-      {/* Slide-down animation */}
-      <style>
-        {`
-          @keyframes slideDown {
-            from {
-              opacity: 0;
-              transform: translateY(-10px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `}
-      </style>
     </div>
   );
 }

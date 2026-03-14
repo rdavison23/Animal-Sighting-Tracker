@@ -19,45 +19,27 @@ export default function SightingsList() {
   if (error) return <p>{error}</p>;
   if (sightings.length === 0) return <p>No sightings found.</p>;
 
-  // If filtered results exist, show them; otherwise show all sightings
   const sightingsToShow = filteredSightings || sightings;
 
   return (
-    <div style={{ maxWidth: '700px', margin: '0 auto', padding: '20px' }}>
+    <div className="page-container">
       <NewSightingForm />
 
-      {/* Date Range Search UI */}
       <SightingsDateSearch onResults={setFilteredSightings} />
 
-      {/* Clear Search Button */}
       {filteredSightings && (
         <button
           onClick={() => setFilteredSightings(null)}
-          style={{
-            marginBottom: '20px',
-            padding: '8px 12px',
-            background: '#ccc',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-          }}>
+          className="nav-btn"
+          style={{ background: '#ccc', color: '#000', marginBottom: '20px' }}>
           Clear Search
         </button>
       )}
 
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Sightings</h2>
+      <h2 className="section-title">Sightings</h2>
 
       {sightingsToShow.map((s) => (
-        <div
-          key={s.id}
-          style={{
-            background: '#fff',
-            border: '1px solid #ddd',
-            padding: '16px',
-            marginBottom: '16px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-          }}>
+        <div key={s.id} className="card">
           <p>
             <strong>Nickname:</strong> {s.nickname}
           </p>
