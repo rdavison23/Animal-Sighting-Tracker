@@ -1,18 +1,15 @@
 import { useState, useRef } from 'react';
 
 export default function NewIndividualForm() {
-  // Form fields
   const [nickname, setNickname] = useState('');
   const [scientistName, setScientistName] = useState('');
   const [speciesId, setSpeciesId] = useState('');
 
-  // Messages
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
   const nicknameInputRef = useRef(null);
 
-  // Use environment variable
   const API_BASE = import.meta.env.VITE_API_BASE;
 
   async function handleSubmit(e) {
@@ -21,7 +18,6 @@ export default function NewIndividualForm() {
     setError(null);
     setSuccess(null);
 
-    // Validate required fields
     if (!nickname || !speciesId) {
       setError('Please fill in all required fields.');
       return;
@@ -48,12 +44,10 @@ export default function NewIndividualForm() {
       await response.json();
       setSuccess('Individual added successfully!');
 
-      // Clear form
       setNickname('');
       setScientistName('');
       setSpeciesId('');
 
-      // Move cursor back to the first field
       nicknameInputRef.current.focus();
     } catch (err) {
       setError(err.message);
@@ -61,45 +55,34 @@ export default function NewIndividualForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-      <h2>Add New Individual</h2>
+    <form onSubmit={handleSubmit} className="form-card">
+      <h3>Add New Individual</h3>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
 
-      <label>
-        Nickname:
-        <input
-          ref={nicknameInputRef}
-          name="nickname"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          required
-        />
-      </label>
-      <br />
+      <label>Nickname</label>
+      <input
+        ref={nicknameInputRef}
+        value={nickname}
+        onChange={(e) => setNickname(e.target.value)}
+        required
+      />
 
-      <label>
-        Scientist Name:
-        <input
-          name="scientist_name"
-          value={scientistName}
-          onChange={(e) => setScientistName(e.target.value)}
-        />
-      </label>
-      <br />
+      <label>Scientist Name</label>
+      <input
+        value={scientistName}
+        onChange={(e) => setScientistName(e.target.value)}
+        required
+      />
 
-      <label>
-        Species ID:
-        <input
-          name="species_id"
-          type="number"
-          value={speciesId}
-          onChange={(e) => setSpeciesId(e.target.value)}
-          required
-        />
-      </label>
-      <br />
+      <label>Species ID</label>
+      <input
+        type="number"
+        value={speciesId}
+        onChange={(e) => setSpeciesId(e.target.value)}
+        required
+      />
 
       <button type="submit">Add Individual</button>
     </form>

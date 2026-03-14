@@ -59,51 +59,39 @@ export default function NewSpeciesForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+    <form onSubmit={handleSubmit} className="form-card">
       <h2>Add New Species</h2>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
 
-      <label>
-        Common Name:
-        <input
-          ref={commonNameRef}
-          value={commonName}
-          onChange={(e) => setCommonName(e.target.value)}
-          required
-        />
-      </label>
-      <br />
+      <label>Common Name</label>
+      <input
+        ref={commonNameRef}
+        value={commonName}
+        onChange={(e) => setCommonName(e.target.value)}
+        required
+      />
 
-      <label>
-        Scientific Name:
-        <input
-          value={scientificName}
-          onChange={(e) => setScientificName(e.target.value)}
-          required
-        />
-      </label>
-      <br />
+      <label>Scientific Name</label>
+      <input
+        value={scientificName}
+        onChange={(e) => setScientificName(e.target.value)}
+        required
+      />
 
-      <label>
-        Estimated Population:
-        <input
-          type="number"
-          value={estimatedPopulation}
-          onChange={(e) => setEstimatedPopulation(e.target.value)}
-        />
-      </label>
-      <br />
+      <label>Estimated Population</label>
+      <input
+        type="number"
+        value={estimatedPopulation}
+        onChange={(e) => setEstimatedPopulation(e.target.value)}
+      />
 
-      <label>
-        Conservation Status:
-        <input
-          value={conservationStatus}
-          onChange={(e) => setConservationStatus(e.target.value)}
-        />
-      </label>
-      <br />
+      <label>Conservation Status</label>
+      <input
+        value={conservationStatus}
+        onChange={(e) => setConservationStatus(e.target.value)}
+      />
 
       <button type="submit">Add Species</button>
     </form>
