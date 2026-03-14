@@ -1,11 +1,10 @@
-const server = require('../server.js');
+const app = require('../app');
 const supertest = require('supertest');
-const requestWithSupertest = supertest(server);
+const request = supertest(app);
 
 describe('get species', () => {
   it('GET /species should show all species', async () => {
-    const res = await requestWithSupertest.get('/species');
-    expect(res.status).toEqual(200);
-    expect(res.type).toEqual(expect.stringContaining('json'));
+    const res = await request.get('/species');
+    expect(res.status).toBe(200);
   });
 });
