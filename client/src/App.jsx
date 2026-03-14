@@ -1,15 +1,25 @@
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import MyNavBar from "./routes/Navbar";
-import ListStudents from "./components/ListStudents";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-function App() {
+import SightingsList from './components/views/SightingsList';
+import SingleSighting from './components/views/SingleSighting';
+import NewSightingForm from './components/forms/NewSightingForm';
+
+import IndividualsList from './components/views/IndividualsList';
+import SingleIndividual from './components/views/SingleIndividual';
+
+export default function App() {
   return (
-    <div className="App">
-      <MyNavBar />
-      <ListStudents />
-    </div>
+    <Router>
+      <Routes>
+        {/* Sightings */}
+        <Route path="/" element={<SightingsList />} />
+        <Route path="/sightings/:id" element={<SingleSighting />} />
+        <Route path="/new-sighting" element={<NewSightingForm />} />
+
+        {/* Individuals */}
+        <Route path="/individuals" element={<IndividualsList />} />
+        <Route path="/individuals/:id" element={<SingleIndividual />} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;
