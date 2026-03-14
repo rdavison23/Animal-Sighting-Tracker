@@ -1,76 +1,149 @@
-.App {
-  min-height: 100vh;
-  background-color: rgb(238, 232, 232);
-  margin: 5px;
+body {
+  background: #f7f3ed;
+  font-family: Inter, Roboto, sans-serif;
+  margin: 0;
+  color: #5a4a3b;
 }
 
-.mybody {
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+.navbar {
+  background: #8c5e3c;
+  padding: 15px 20px;
   display: flex;
-  gap: 3em;
-  padding: 1em;
+  justify-content: center;
+  gap: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-a.navbar-brand {
-  margin-inline-start: -5em;
-}
-
-.nav-link {
-  color: white !important;
-  margin-left: 5em;
-}
-
-.list-students {
-  text-align: center;
-  margin-top: 25px;
-  flex: 1;
-}
-
-ul {
-  list-style-type: none;
-}
-
-form {
-  flex-direction: column;
-  align-items: center;
-  text-align: left;
-  margin-top: 3em;
-  flex: 1;
-}
-
-input[type="text"] {
-  display: inline-block;
-  margin-top: -10px;
-  width: 100%;
+.nav-btn {
+  background: #a47148;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
   font-size: 15px;
-  border-radius: 2px;
-  border: 3px solid #98d0f1;
+  transition: background 0.2s, transform 0.1s;
 }
 
-button.btn.btn-primary {
-  margin-top: 25px;
+.nav-btn.active {
+  background: #b98b5d;
 }
 
-.myicon {
-  stroke: rgb(243, 121, 7);
-  color: rgb(243, 121, 7);
-  stroke-width: 10;
-  margin-right: 0.9em;
+.nav-btn:hover {
+  background: #7a4f33;
 }
 
-.form-label {
-  margin-bottom: 0 !important;
-  margin-top: 0.5em;
+.card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #e0d6c8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-.form-check {
-  margin-top: 1em;
+.card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.card-body {
-  margin-left: 2em;
-  margin-right: 2em;
+.card.selected {
+  border: 2px solid #7d8f69;
+  background: #f0f3ea;
+
+  .details-card {
+    animation: slideDown 0.3s ease-out;
+  }
 }
 
-#contact {
-  padding: 5em;
+.form-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  border: 1px solid #e0d6c8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.form-card h2,
+.form-card h3 {
+  margin-bottom: 16px;
+  color: #5a4a3b;
+}
+
+.form-card label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #5a4a3b;
+}
+
+.form-card input,
+.form-card select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+  border: 1px solid #d2c7b8;
+  border-radius: 6px;
+  font-size: 15px;
+  background: #faf7f2;
+}
+
+.form-card button {
+  background: #7d8f69;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+
+.form-card button:hover {
+  background: #6b7c59;
+
+  .success-message {
+    background: #e8f0e1;
+    color: #4f5a3a;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    border: 1px solid #cdd8c3;
+    font-size: 14px;
+  }
+}
+
+.error-message {
+  background: #fbe9e7;
+  color: #8c3b2f;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  border: 1px solid #f2c1b8;
+  font-size: 14px;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #5a4a3b;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
